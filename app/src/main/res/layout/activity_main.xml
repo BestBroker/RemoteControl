@@ -6,13 +6,92 @@
     android:layout_height="match_parent"
     tools:context="com.example.felix.remotecontrol.MainActivity">
 
-   <Button
-       android:layout_width="match_parent"
-       android:layout_height="match_parent"
-       android:text="Send Text"
-       android:onClick="send_codes_app"
-       android:clickable="true"
+<LinearLayout
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-       />
+   <TextView
+       android:id="@+id/textView2"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:text="Fernbedienung"
+       android:textAlignment="center"
+       android:textSize="18sp"
+       android:layout_marginLeft="8dp"
+       android:layout_marginRight="8dp"
+       android:layout_marginTop="10dp"/>
+
+   <Space
+       android:layout_width="match_parent"
+       android:layout_height="15dp" />
+
+   <TextView
+       android:id="@+id/bez_eingabe_frequenz"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_marginLeft="10dp"
+       android:layout_marginRight="8dp"
+       android:layout_marginTop="30dp"
+       android:text="Frequenz:"
+       android:textAlignment="textStart"
+       android:gravity="start"
+       android:textSize="16sp" />
+
+   <EditText
+       android:id="@+id/eingabe_frequenz"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:ems="10"
+       android:inputType="number"
+       android:textAlignment="textStart"
+       android:gravity="start"
+       android:textSize="16sp"
+       android:layout_marginLeft="10dp"
+       android:layout_marginRight="10dp"
+       android:layout_marginTop="10dp" />
+
+   <Space
+       android:layout_width="match_parent"
+       android:layout_height="15dp" />
+
+   <TextView
+       android:id="@+id/bez_eingabe_code"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_marginLeft="10dp"
+       android:layout_marginRight="8dp"
+       android:layout_marginTop="30dp"
+       android:text="Code"
+       android:textAlignment="textStart"
+       android:gravity="start"
+       android:textSize="16sp" />
+
+   <EditText
+       android:id="@+id/eingabe_code"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:ems="10"
+       android:inputType="number"
+       android:textAlignment="textStart"
+       android:gravity="start"
+       android:textSize="16sp"
+       android:layout_marginLeft="10dp"
+       android:layout_marginRight="10dp"
+       android:layout_marginTop="10dp" />
+
+   <Space
+       android:layout_width="match_parent"
+       android:layout_height="15dp" />
+
+   <Button
+       android:id="@+id/senden"
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_alignParentTop="true"
+       android:background="@drawable/button_background"
+       android:text="Senden" />
+
+</LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
