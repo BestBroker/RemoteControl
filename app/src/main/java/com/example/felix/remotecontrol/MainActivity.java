@@ -38,9 +38,15 @@ public class MainActivity extends AppCompatActivity {
             toast.show();
         }
         int [] Array;
-        Array = new int[10];
-        //TODO: Wie schreibe ich die Codes in den Array?
-        mCIR.transmit(20000,Array);
+        Array = new int[150];
+        //TODO: Was sind die richtigen Codes?
+        int protocol = 0x222;
+        String pro = Integer.toString(protocol);
+        for(int i  =0; i<pro.length(); i++){
+            int j=i+1;
+        Array[i]=Integer.parseInt(pro.substring(i,j));
+        }
+        mCIR.transmit(20000000,Array);
 
 
     }
