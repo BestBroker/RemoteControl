@@ -29,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
     int frequenz=0;
     int code=0;
 
+    int button_pressed =0;
+
     Button senden;
 
     @Override
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
            @RequiresApi(api = Build.VERSION_CODES.KITKAT)
            @Override
            public void onClick(View view) {
+
                send_codes_app();
            }
        });
@@ -65,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         String st_code = set_code.getText().toString();
         if(st_code!= null && !st_code.isEmpty()){
             frequenz = Integer.parseInt(st_frequenz);
+            button_pressed = Integer.parseInt(st_code);
 
 
 
@@ -77,13 +81,19 @@ public class MainActivity extends AppCompatActivity {
             toast.show();
         }else if(mCIR.hasIrEmitter()){
 
-                int d = st_code.length();
-                int[] Array = new int[d];
+            int codes = return_codes(button_pressed);
+                int[] Array;
+                Array = new int[200];
 
-                for (int i = 0; i < st_code.length(); i++) {
-                    Array[i] = Integer.parseInt(st_code.substring(i));
-                }
+                //TODO: Umwandlung von binären Codes in int Array
+
+
+
+
+
                 mCIR.transmit(frequenz, Array);
+
+
             }
 
         }else{
@@ -103,5 +113,43 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public int return_codes (int button_pressed){
+        String int_code="";
+        switch(button_pressed){
+            case 0:
+                int_code = String.valueOf(0xFF827D);
+                break;
+            default:
+                CharSequence text3 = "Kein Code dazu hinterlegt";
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast3 = Toast.makeText(getApplicationContext(), text3, duration);
+                toast3.show();
 
+        }
+
+        if(!int_code.isEmpty()) {
+            String bin_string = hexToBin(int_code);
+            int code_bin = Integer.parseInt(bin_string);
+            return code_bin;
+        }
+    }
+
+    private String hexToBin(String hex){
+        String bin = "";
+        String binFragment = "";
+        int iHex;
+        hex = hex.trim();
+        hex = hex.replaceFirst("0x", "");
+
+        for(int i = 0; i < hex.length(); i++){
+            iHex = Integer.parseInt(""+hex.charAt(i),16);
+            binFragment = Integer.toBinaryString(iHex);
+
+            while(binFragment.length() < 4){
+                binFragment = "0" + binFragment;
+            }
+            bin += binFragment;
+        }
+        return bin;
+    }
 }
