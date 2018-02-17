@@ -86,7 +86,8 @@ public class MainActivity extends AppCompatActivity {
                 Array = new int[200];
 
                 //TODO: Umwandlung von binären Codes in int Array
-
+            Array[0] = (9000);
+            Array[1] = (4500);
 
 
 
@@ -117,7 +118,13 @@ public class MainActivity extends AppCompatActivity {
         String int_code="";
         switch(button_pressed){
             case 0:
+                //So richtig?
+                //On
                 int_code = String.valueOf(0xFF827D);
+                break;
+            case 1:
+                //Off
+                int_code = String.valueOf(0xFF02FD);
                 break;
             default:
                 CharSequence text3 = "Kein Code dazu hinterlegt";
@@ -130,8 +137,11 @@ public class MainActivity extends AppCompatActivity {
         if(!int_code.isEmpty()) {
             String bin_string = hexToBin(int_code);
             int code_bin = Integer.parseInt(bin_string);
-            return code_bin;
+
         }
+        String bin_string = hexToBin(int_code);
+        int code_bin = Integer.parseInt(bin_string);
+        return code_bin;
     }
 
     private String hexToBin(String hex){
