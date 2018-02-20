@@ -13,6 +13,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.math.BigInteger;
+import java.util.Locale;
+
 import static android.content.ContentValues.TAG;
 
 public class MainActivity extends AppCompatActivity {
@@ -27,8 +30,7 @@ public class MainActivity extends AppCompatActivity {
     EditText set_code;
 
     int frequenz=0;
-    int code=0;
-
+    String code ="";
     int button_pressed =0;
 
     Button senden;
@@ -72,30 +74,50 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        mCIR = (ConsumerIrManager) context.getSystemService(Context.CONSUMER_IR_SERVICE);
-        if (!mCIR.hasIrEmitter()) {
+        //mCIR = (ConsumerIrManager) context.getSystemService(Context.CONSUMER_IR_SERVICE);
+        /*if (!mCIR.hasIrEmitter()) {
             Log.e(TAG, "No IR Emitter found!\n");
             CharSequence text = "Kein IR-Emitter gefunden";
             int duration = Toast.LENGTH_SHORT;
             Toast toast = Toast.makeText(getApplicationContext(), text, duration);
             toast.show();
-        }else if(mCIR.hasIrEmitter()){
+        }else if(mCIR.hasIrEmitter()){*/
 
-            int codes = return_codes(button_pressed);
-                int[] Array;
-                Array = new int[200];
+            String code = return_codes(button_pressed);
 
-                //TODO: Umwandlung von binären Codes in int Array
+            int[] Array;
+            Array = new int[200];
+            int arry=2;
+
+            //Startimpuls
+
             Array[0] = (9000);
             Array[1] = (4500);
 
+            String address = code.substring(0,8);
+            String address_inv = code.substring(8,16);
 
+            String message = code.substring(16,24);
+            String message_inv = code.substring(24);
 
+            for(int i=8; i>0;i--){
+                String help = address.substring(i,i+1);
 
-                mCIR.transmit(frequenz, Array);
-
-
+                if(help=="0"){
+                    Array[arry]=(1125);
+                }else if(help=="1"){
+                    Array[arry]=(2250);
+                }else{
+                    Log.e(TAG, "Invalid Binary Value");
+                }
+                arry++;
             }
+
+
+            //mCIR.transmit(frequenz, Array);
+
+
+            /*}*/
 
         }else{
             CharSequence text2 = "Code eingeben";
@@ -114,17 +136,20 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public int return_codes (int button_pressed){
+    //TODO: Codes gleich binär ablegen und Funktion zur Konvertierung weglassen
+    public String return_codes (int button_pressed){
         String int_code="";
+        int code_bin = 0;
+
         switch(button_pressed){
             case 0:
                 //So richtig?
                 //On
-                int_code = String.valueOf(0xFF827D);
+                int_code = Integer.toBinaryString(0xff827d);
                 break;
             case 1:
                 //Off
-                int_code = String.valueOf(0xFF02FD);
+                int_code = Integer.toBinaryString(0xFF02FD);
                 break;
             default:
                 CharSequence text3 = "Kein Code dazu hinterlegt";
@@ -132,34 +157,17 @@ public class MainActivity extends AppCompatActivity {
                 Toast toast3 = Toast.makeText(getApplicationContext(), text3, duration);
                 toast3.show();
 
-        }
 
-        if(!int_code.isEmpty()) {
-            String bin_string = hexToBin(int_code);
-            int code_bin = Integer.parseInt(bin_string);
 
         }
-        String bin_string = hexToBin(int_code);
-        int code_bin = Integer.parseInt(bin_string);
-        return code_bin;
+
+        //Führende Nullen addieren:
+        int_code = "00000000"+int_code.substring(0);
+        int show_log = int_code.length();
+        Log.i(TAG, "Bitzahl Code:" + Integer.toString(show_log));
+
+        return int_code;
+
     }
 
-    private String hexToBin(String hex){
-        String bin = "";
-        String binFragment = "";
-        int iHex;
-        hex = hex.trim();
-        hex = hex.replaceFirst("0x", "");
-
-        for(int i = 0; i < hex.length(); i++){
-            iHex = Integer.parseInt(""+hex.charAt(i),16);
-            binFragment = Integer.toBinaryString(iHex);
-
-            while(binFragment.length() < 4){
-                binFragment = "0" + binFragment;
-            }
-            bin += binFragment;
-        }
-        return bin;
-    }
 }
