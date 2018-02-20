@@ -74,50 +74,119 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        //mCIR = (ConsumerIrManager) context.getSystemService(Context.CONSUMER_IR_SERVICE);
-        /*if (!mCIR.hasIrEmitter()) {
+        mCIR = (ConsumerIrManager) context.getSystemService(Context.CONSUMER_IR_SERVICE);
+        if (!mCIR.hasIrEmitter()) {
             Log.e(TAG, "No IR Emitter found!\n");
             CharSequence text = "Kein IR-Emitter gefunden";
             int duration = Toast.LENGTH_SHORT;
             Toast toast = Toast.makeText(getApplicationContext(), text, duration);
             toast.show();
-        }else if(mCIR.hasIrEmitter()){*/
+        }else if(mCIR.hasIrEmitter()){
 
             String code = return_codes(button_pressed);
 
             int[] Array;
-            Array = new int[200];
+            Array = new int[100];
             int arry=2;
 
             //Startimpuls
-
             Array[0] = (9000);
             Array[1] = (4500);
 
-            String address = code.substring(0,8);
-            String address_inv = code.substring(8,16);
 
-            String message = code.substring(16,24);
-            String message_inv = code.substring(24);
+            if(!code.isEmpty()&& code!=null) {
+                String address = code.substring(0, 8);
+                String address_inv = code.substring(8, 16);
 
-            for(int i=8; i>0;i--){
-                String help = address.substring(i,i+1);
+                String message = code.substring(16, 24);
+                String message_inv = code.substring(24);
 
-                if(help=="0"){
-                    Array[arry]=(1125);
-                }else if(help=="1"){
-                    Array[arry]=(2250);
-                }else{
-                    Log.e(TAG, "Invalid Binary Value");
+
+                for (int i = 8; i > 0; i--) {
+                    String help = address.substring(i - 1, i);
+                    int help_int = Integer.parseInt(help);
+
+                    if (help_int == 0) {
+                        Array[arry] = (563);
+                        arry += 1;
+                        Array[arry] = (562);
+                    } else if (help_int == 1) {
+                        Array[arry] = (563);
+                        arry += 1;
+                        Array[arry] = (1687);
+                    } else {
+                        Log.e(TAG, "Invalid Binary Value");
+                    }
+                    arry += 1;
                 }
-                arry++;
+
+                for (int i = 8; i > 0; i--) {
+                    String help = address_inv.substring(i - 1, i);
+                    int help_int = Integer.parseInt(help);
+
+                    if (help_int == 0) {
+                        Array[arry] = (563);
+                        arry += 1;
+                        Array[arry] = (562);
+                    } else if (help_int == 1) {
+                        Array[arry] = (563);
+                        arry += 1;
+                        Array[arry] = (1687);
+                    } else {
+                        Log.e(TAG, "Invalid Binary Value");
+                    }
+                    arry += 1;
+                }
+
+                for (int i = 8; i > 0; i--) {
+                    String help = message.substring(i - 1, i);
+                    int help_int = Integer.parseInt(help);
+
+                    if (help_int == 0) {
+                        Array[arry] = (563);
+                        arry++;
+                        Array[arry] = (562);
+                    } else if (help_int == 1) {
+                        Array[arry] = (563);
+                        arry++;
+                        Array[arry] = (1687);
+                    } else {
+                        Log.e(TAG, "Invalid Binary Value");
+                    }
+                    arry++;
+                }
+
+                for (int i = 8; i > 0; i--) {
+                    String help = message_inv.substring(i - 1, i);
+                    int help_int = Integer.parseInt(help);
+
+                    if (help_int == 0) {
+                        Array[arry] = (563);
+                        arry++;
+                        Array[arry] = (562);
+                    } else if (help_int == 1) {
+                        Array[arry] = (563);
+                        arry++;
+                        Array[arry] = (1687);
+                    } else {
+                        Log.e(TAG, "Invalid Binary Value");
+                    }
+                    arry++;
+                }
+
+                Array[arry] = (563);
+
+                mCIR.transmit(frequenz, Array);
+
+
             }
 
-
-            //mCIR.transmit(frequenz, Array);
-
-
-            /*}*/
+            }else{
+                CharSequence text3 = "Kein Code dazu hinterlegt";
+                int duration = Toast.LENGTH_SHORT;
+                Toast toast3 = Toast.makeText(getApplicationContext(), text3, duration);
+                toast3.show();
+            }
 
         }else{
             CharSequence text2 = "Code eingeben";
@@ -136,10 +205,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    //TODO: Codes gleich binär ablegen und Funktion zur Konvertierung weglassen
     public String return_codes (int button_pressed){
         String int_code="";
-        int code_bin = 0;
 
         switch(button_pressed){
             case 0:
@@ -156,18 +223,27 @@ public class MainActivity extends AppCompatActivity {
                 int duration = Toast.LENGTH_SHORT;
                 Toast toast3 = Toast.makeText(getApplicationContext(), text3, duration);
                 toast3.show();
+                break;
 
 
 
         }
 
-        //Führende Nullen addieren:
-        int_code = "00000000"+int_code.substring(0);
-        int show_log = int_code.length();
-        Log.i(TAG, "Bitzahl Code:" + Integer.toString(show_log));
+        if(!int_code.isEmpty()&&int_code!=null) {
+            //Führende Nullen addieren:
+            int_code = "00000000" + int_code.substring(0);
+            int show_log = int_code.length();
+            Log.i(TAG, "Bitzahl Code:" + Integer.toString(show_log));
+
+
+        }else{
+            CharSequence text3 = "Kein Code dazu hinterlegt";
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast3 = Toast.makeText(getApplicationContext(), text3, duration);
+            toast3.show();
+        }
 
         return int_code;
-
     }
 
 }
